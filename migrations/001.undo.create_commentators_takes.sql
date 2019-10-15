@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS commentators;
+DROP TABLE IF EXISTS takes;
