@@ -1,6 +1,6 @@
 const path = require('path')
 const express = require('express')
-const CommentatorService = require('./commentators-service')
+const CommentatorsService = require('./commentators-service')
 
 const commentatorsRouter = express.Router()
 const jsonParser = express.json()
@@ -18,7 +18,7 @@ commentatorsRouter
     .route('/')
     .get((req, res, next) => {
         const knexInstance = req.app.get('db')
-        CommentatorService.getAllCommentators(knexInstance)
+        CommentatorsService.getAllCommentators(knexInstance)
             .then(commentators => {
                 res.json(commentators.map(serializeCommentator))
             })
@@ -33,24 +33,24 @@ commentatorsRouter
                 return res.status(400).json({
                 error: { message: `Missing '${key}' in request body` }
                 })
-            CommentatorService.insertCommentator(
-            req.app.get('db'),
-            newCommentator
+            CommentatorsService.insertCommentator(
+                req.app.get('db'),
+                newCommentator
             )
-            .then(commentator => {
-                res
-                .status(201)
-                .location(path.posix.join(req.originalUrl, `/${commentator.id}`))
-                .json(serializeCommentator(commentator))
-            })
-            .catch(next)
+                .then(commentator => {
+                    res
+                    .status(201)
+                    .location(path.posix.join(req.originalUrl, `/${commentator.id}`))
+                    .json(serializeCommentator(commentator))
+                })
+                .catch(next)
     })
 
 
 commentatorsRouter
     .route('/:commentatorId')
     .get((req, res, next) => {
-        CommentatorService.getById(
+        CommentatorsService.getById(
             req.app.get('db'),
             req.params.commentatorId
         )
@@ -69,7 +69,7 @@ commentatorsRouter
         res.json(serializeCommentator(res.commentator))
     })
     .delete((req, res, next) => {
-        CommentatorService.deleteCommentator(
+        CommentatorsService.deleteCommentator(
             req.app.get('db'),
             req.params.commentatorId
         )
