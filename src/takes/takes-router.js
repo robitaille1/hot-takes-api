@@ -47,6 +47,38 @@ const serializeTake = take => ({
         .catch(next)
     }) 
 
+    takesRouter
+        .route('/:takeId')
+        .get((req, res, next) => {
+            TakesService.getById(
+                req.app.get('db'),
+                req.params.takeId
+            )
+            .then(take => {
+                if(!take) {
+                    return res.status(404).json({
+                        error: { message: `Take doesn't exist`}
+                    })
+                }
+                res.take = take
+                next()
+            })
+            .catch(next)
+        })
+        .get((req, res, next) => {
+            res.json(serializeTake(res.take))
+        })
+        .delete((req, res, next) => {
+            TakesService.deleteTake(
+                req.app.get('db'),
+                req.params.takeId
+            )
+            .then(numRowsAffected => {
+                res.status(204).end()
+            })
+            .catch(next)
+        })
+
 
 
 module.exports = takesRouter

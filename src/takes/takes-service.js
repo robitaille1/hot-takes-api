@@ -12,7 +12,7 @@ const TakesService = {
         })
     },
     getById(knex, id) {
-      return knex.from('takes').select('*').where('id', id).first()
+        return knex.from('takes').select('*').where('id', id).first()
     },
     deleteTake(knex, id) {
       return knex('takes')
