@@ -13,6 +13,6 @@ CREATE TABLE IF NOT EXISTS takes (
     date TIMESTAMP DEFAULT now() NOT NULL,
     commentatorId INTEGER REFERENCES commentators(id) ON DELETE CASCADE NOT NULL,
     commentator TEXT NOT NULL,
-    correct BOOLEAN NOT NULL,
+    correct TEXT NOT NULL,
     sport TEXT NOT NULL
 );
