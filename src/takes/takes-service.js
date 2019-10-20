@@ -19,6 +19,11 @@ const TakesService = {
         .where({ id })
         .delete()
     },
+    updatetake(knex, id, newTakeFields) {
+      return knex('takes')
+        .where({ id })
+        .update(newTakeFields)
+  },
   }
   
   module.exports = TakesService

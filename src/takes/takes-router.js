@@ -78,6 +78,29 @@ const serializeTake = take => ({
             })
             .catch(next)
         })
+        .patch(jsonParser, (req, res, next) => {
+            const { take, date, commentatorid, commentator, correct, sport } = req.body
+            const takeToUpdate = { take, date, commentatorid, commentator, correct, sport }
+    
+            const numberOfValues = Object.values(takeToUpdate).filter(Boolean).length
+    
+            if (numberOfValues === 0) {
+                return res.status(400).json({
+                error: {
+                    message: `Request body must contain either 'take', 'date, 'commentator', 'correct' or 'sport'`
+                }
+                })
+            }
+            TakesService.updateTake(
+                req.app.get('db'),
+                req.params.takeId,
+                takeToUpdate
+            )
+            .then(numRowsAffected => {
+                res.status(204).end()
+            })
+            .catch(next)
+        })
 
 
 

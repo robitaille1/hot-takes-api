@@ -4,7 +4,7 @@ const fixtures = require('./commentators-fixtures')
 const helpers = require('./test-helpers')
 
 
-describe('Commentators Endpoints', function() {
+describe.only('Commentators Endpoints', function() {
     let db
     
     before('make knex instance', () => {
@@ -146,4 +146,75 @@ describe('Commentators Endpoints', function() {
           )
       })
     })
+    describe(`PATCH /api/commentators/:id`, () => {
+        context('Given there are commentators in the database', () => {
+          const testCommentators = fixtures.makeCommentatorsArray()
+  
+          beforeEach('insert commentators', () => {
+            return db
+              .into('commentators')
+              .insert(testCommentators)
+          })
+        
+              it('responds with 204 and updates the commentators', () => {
+                const idToUpdate = 2
+                const updateCommentator = {
+                  id: 2,
+                  name: 'updated test commentator',
+                  network: 'New Network',
+                  twitter: 'new twitter',
+                  instagram: 'new instagram',
+                  about: 'updated about content',
+                }
+                
+                const expectedCommentator = {
+                  ...testCommentators[idToUpdate - 1],
+                  ...updateCommentator
+                }
+                return supertest(app)
+                  .patch(`/api/commentators/${idToUpdate}`)
+                  .send(updateCommentator)
+                  .expect(204)
+                  .then(res => 
+                      supertest(app)
+                      .get(`/api/commentators/${idToUpdate}`)
+                      .expect(expectedCommentator)
+                    )
+              })
+              it(`responds with 400 when no required fields supplied`, () => {
+                const idToUpdate = 2
+                return supertest(app)
+                  .patch(`/api/commentators/${idToUpdate}`)
+                  .send({ irrelevantField: 'foo' })
+                  .expect(400, {
+                    error: {
+                      message: `Request body must contain either 'name' or 'network'`
+                    }
+                  })
+              })
+              it(`responds with 204 when updating only a subset of fields`, () => {
+                const idToUpdate = 2
+                const updateCommentator = {
+                  name: 'updated name test',
+                }
+                const expectedCommentator = {
+                  ...testCommentators[idToUpdate - 1],
+                  ...updateCommentator
+                }
+          
+                return supertest(app)
+                  .patch(`/api/commentators/${idToUpdate}`)
+                  .send({
+                    ...updateCommentator,
+                    fieldToIgnore: 'should not be in GET response'
+                  })
+                  .expect(204)
+                  .then(res =>
+                    supertest(app)
+                      .get(`/api/commentators/${idToUpdate}`)
+                      .expect(expectedCommentator)
+                  )
+              })
+            })  
+       })
 })

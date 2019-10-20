@@ -170,4 +170,76 @@ describe('Takes Endpoints', function() {
           )
       })
     })
+    describe(`PATCH /api/takes/:id`, () => {
+        context('Given there are takes in the database', () => {
+          const testTakes = fixtures.makeTakesArray()
+  
+          beforeEach('insert takes', () => {
+            return db
+              .into('takes')
+              .insert(testTakes)
+          })
+        
+              it('responds with 204 and updates the commentators', () => {
+                const idToUpdate = 2
+                const updateTake = {
+                  id: 2,
+                  take: 'updated test take',
+                  date: new Date(),
+                  commentator: 'test commentator',
+                  commentatorid: 2,
+                  correct: 'TRUE',
+                  sport: 'NFL',
+                }
+                
+                const expectedTake = {
+                  ...testTakes[idToUpdate - 1],
+                  ...updateTake
+                }
+                return supertest(app)
+                  .patch(`/api/takes/${idToUpdate}`)
+                  .send(updateTake)
+                  .expect(204)
+                  .then(res => 
+                      supertest(app)
+                      .get(`/api/takes/${idToUpdate}`)
+                      .expect(expectedTake)
+                    )
+              })
+              it(`responds with 400 when no required fields supplied`, () => {
+                const idToUpdate = 2
+                return supertest(app)
+                  .patch(`/api/takes/${idToUpdate}`)
+                  .send({ irrelevantField: 'foo' })
+                  .expect(400, {
+                    error: {
+                        message: `Request body must contain either 'take', 'date, 'commentator', 'correct' or 'sport'`
+                    }
+                  })
+              })
+              it(`responds with 204 when updating only a subset of fields`, () => {
+                const idToUpdate = 2
+                const updateTake = {
+                  take: 'updated take test',
+                }
+                const expectedTake = {
+                  ...testTakes[idToUpdate - 1],
+                  ...updateTake
+                }
+          
+                return supertest(app)
+                  .patch(`/api/takes/${idToUpdate}`)
+                  .send({
+                    ...updateTake,
+                    fieldToIgnore: 'should not be in GET response'
+                  })
+                  .expect(204)
+                  .then(res =>
+                    supertest(app)
+                      .get(`/api/takes/${idToUpdate}`)
+                      .expect(expectedTake)
+                  )
+              })
+            })  
+       })
 })
