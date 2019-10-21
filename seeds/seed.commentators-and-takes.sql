@@ -7,12 +7,12 @@ VALUES
   ('Dave Portnoy', 'Barstool Sports', 'https://twitter.com/stoolpresidente', 'https://www.instagram.com/stoolpresidente/', 'David Portnoy is an American internet celebrity, blogger, and founder of the satirical sports and pop culture blog Barstool Sports.'),
   ('Stephen A. Smith', 'ESPN', 'https://twitter.com/stephenasmith', 'https://www.instagram.com/stephenasmith/', 'Stephen Anthony Smith is an American sports television personality, sports radio host, sports journalist, and actor. Smith is a commentator on ESPN First Take, where he appears with Max Kellerman and Molly Qerim. He also makes frequent appearances as an NBA analyst on SportsCenter');
 
-INSERT INTO takes (take, date, commentatorId, commentator, correct, sport) VALUES
-  ('The Celtics will beat the Cavs by 50 points', '10/13/19', '1', 'Bill Simmons', 'FALSE', 'NBA'),
-  ('The Chiefs will beat the Texans.', '10/13/19', '1', 'Bill Simmons', 'FALSE', 'NFL'),
-  ('The Patriots will beat the Giants', '10/10/19', '2', 'Dave Portnoy', 'TRUE', 'NFL'),
-  ('Kyrie Irving will leave the Celtics', '07/31/19', '1', 'Bill Simmons', 'TRUE', 'NBA'),
-  ('The Raptors will beat the Warriors in the Finals', '06/01/19', '1', 'Bill Simmons', 'TRUE', 'NBA'),
-  ('Patrick Mahomes will win the MVP for the 2018 season', '08/01/18', '3', 'Stephen A. Smith', 'TRUE', 'NFL');
+INSERT INTO takes (take, commentatorId, commentator, correct, sport) VALUES
+  ('The Celtics will beat the Cavs by 50 points', '1', 'Bill Simmons', 'FALSE', 'NBA'),
+  ('The Chiefs will beat the Texans.', '1', 'Bill Simmons', 'FALSE', 'NFL'),
+  ('The Patriots will beat the Giants', '2', 'Dave Portnoy', 'TRUE', 'NFL'),
+  ('Kyrie Irving will leave the Celtics', '1', 'Bill Simmons', 'TRUE', 'NBA'),
+  ('The Raptors will beat the Warriors in the Finals', '1', 'Bill Simmons', 'TRUE', 'NBA'),
+  ('Patrick Mahomes will win the MVP for the 2018 season', '3', 'Stephen A. Smith', 'TRUE', 'NFL');
 
 COMMIT;
