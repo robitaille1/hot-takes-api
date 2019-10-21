@@ -78,28 +78,5 @@ commentatorsRouter
         })
         .catch(next)
     })
-    .patch(jsonParser, (req, res, next) => {
-        const { name, network, twitter, instagram, about } = req.body
-        const commentatorToUpdate = { name, network, twitter, instagram, about }
-
-        const numberOfValues = Object.values(commentatorToUpdate).filter(Boolean).length
-
-        if (numberOfValues === 0) {
-            return res.status(400).json({
-            error: {
-                message: `Request body must contain either 'name' or 'network'`
-            }
-            })
-        }
-        CommentatorsService.updateCommentator(
-            req.app.get('db'),
-            req.params.commentatorId,
-            commentatorToUpdate
-        )
-        .then(numRowsAffected => {
-            res.status(204).end()
-        })
-        .catch(next)
-    })
 
 module.exports = commentatorsRouter

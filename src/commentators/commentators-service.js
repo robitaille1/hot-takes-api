@@ -19,11 +19,6 @@ const CommentatorsService = {
             .where({ id })
             .delete()
     },
-    updateCommentator(knex, id, newCommentatorFields) {
-        return knex('commentators')
-          .where({ id })
-          .update(newCommentatorFields)
-    },
     
 }
 
