@@ -21,7 +21,7 @@ describe('Takes Endpoints', function() {
 
       afterEach('cleanup', () => helpers.cleanTables(db))
 
-      describe.only(`GET /api/takes`, () => {
+      describe(`GET /api/takes`, () => {
         context(`Given no takes`, () => {
           it(`responds with 200 and an empty list`, () => {
             return supertest(app)
@@ -90,7 +90,7 @@ describe('Takes Endpoints', function() {
     describe('DELETE /api/takes/:id', () => {
       context('Given there are takes in the database', () => {
         const testCommentators = commFixtures.makeCommentatorsArray()
-          const testTakes = fixtures.makeTakesArray()
+        const testTakes = fixtures.makeTakesArray()
           
           beforeEach('insert commentators', () => {
             return db
@@ -119,43 +119,59 @@ describe('Takes Endpoints', function() {
       })
     })
     describe('POST /api/takes', () => {
-      ['take', 'date_created', 'commentatorId', 'commentator', 'correct', 'sport'].forEach(field => {
-        const newTake = {
-            take: 'I love sports',
-            date: new Date('2029-01-22T16:28:32.615Z'),
-            commentatorid: 3,
-            commentator: 'Jefe Test',
-            correct: false,
-            sport: 'NBA'
-        }
-  
-        it(`responds with 400 missing '${field}' if not supplied`, () => {
-          delete newTake[field]
-  
-          return supertest(app)
-            .post(`/api/takes`)
-            .send(newTake)
-            .expect(400, {
-              error: { message: `Missing '${field}' in request body` }
-            })
+      context('Given commentators in the database', () => {
+    
+
+        ['take', 'commentatorid', 'commentator', 'correct', 'sport'].forEach(field => {
+          const newTake = {
+              take: 'I love sports',
+              commentatorid: 3,
+              commentator: 'Jefe Test',
+              correct: false,
+              sport: 'NBA'
+          }
+          it(`responds with 400 missing '${field}' if not supplied`, () => {
+            delete newTake[field]
+    
+            return supertest(app)
+              .post(`/api/takes`)
+              .send(newTake)
+              .expect(400, {
+                error: { message: `Missing '${field}' in request body` }
+              })
+          })
+          it(`responds with 400 missing '${field}' if not supplied`, () => {
+            delete newTake[field]
+    
+            return supertest(app)
+              .post(`/api/takes`)
+              .send(newTake)
+              .expect(400, {
+                error: { message: `Missing '${field}' in request body` }
+              })
+          })
         })
-      })
-      it('adds a new take to the database', () => {
-        const newTake = {
-            take: 'I love sports',
-            date: new Date('2029-01-22T16:28:32.615Z'),
-            commentatorid: 3,
-            commentator: 'Jefe Test',
-            correct: false,
-            sport: 'NBA'
-        }
-        return supertest(app)
+        const testCommentators = commFixtures.makeCommentatorsArray()
+        beforeEach('insert commentators', () => {
+          return db
+            .into('commentators')
+            .insert(testCommentators)
+        })
+        it('adds a new take to the database', () => {
+          const newTake = {
+              take: 'I love sports',
+              commentatorid: 3,
+              commentator: 'Jefe Test',
+              correct: false,
+              sport: 'NBA'
+          }
+
+          return supertest(app)
           .post(`/api/takes`)
           .send(newTake)
           .expect(201)
           .expect(res => {
             expect(res.body.take).to.eql(newTake.take)
-            expect(res.body.date).to.eql(newTake.date)
             expect(res.body.commentatorid).to.eql(newTake.commentatorid)
             expect(res.body.commentator).to.eql(newTake.commentator)
             expect(res.body.correct).to.eql(newTake.correct)
@@ -169,77 +185,6 @@ describe('Takes Endpoints', function() {
               .expect(res.body)
           )
       })
+      })
     })
-    describe(`PATCH /api/takes/:id`, () => {
-        context('Given there are takes in the database', () => {
-          const testTakes = fixtures.makeTakesArray()
-  
-          beforeEach('insert takes', () => {
-            return db
-              .into('takes')
-              .insert(testTakes)
-          })
-        
-              it('responds with 204 and updates the commentators', () => {
-                const idToUpdate = 2
-                const updateTake = {
-                  id: 2,
-                  take: 'updated test take',
-                  date: new Date(),
-                  commentator: 'test commentator',
-                  commentatorid: 2,
-                  correct: 'TRUE',
-                  sport: 'NFL',
-                }
-                
-                const expectedTake = {
-                  ...testTakes[idToUpdate - 1],
-                  ...updateTake
-                }
-                return supertest(app)
-                  .patch(`/api/takes/${idToUpdate}`)
-                  .send(updateTake)
-                  .expect(204)
-                  .then(res => 
-                      supertest(app)
-                      .get(`/api/takes/${idToUpdate}`)
-                      .expect(expectedTake)
-                    )
-              })
-              it(`responds with 400 when no required fields supplied`, () => {
-                const idToUpdate = 2
-                return supertest(app)
-                  .patch(`/api/takes/${idToUpdate}`)
-                  .send({ irrelevantField: 'foo' })
-                  .expect(400, {
-                    error: {
-                        message: `Request body must contain either 'take', 'date, 'commentator', 'correct' or 'sport'`
-                    }
-                  })
-              })
-              it(`responds with 204 when updating only a subset of fields`, () => {
-                const idToUpdate = 2
-                const updateTake = {
-                  take: 'updated take test',
-                }
-                const expectedTake = {
-                  ...testTakes[idToUpdate - 1],
-                  ...updateTake
-                }
-          
-                return supertest(app)
-                  .patch(`/api/takes/${idToUpdate}`)
-                  .send({
-                    ...updateTake,
-                    fieldToIgnore: 'should not be in GET response'
-                  })
-                  .expect(204)
-                  .then(res =>
-                    supertest(app)
-                      .get(`/api/takes/${idToUpdate}`)
-                      .expect(expectedTake)
-                  )
-              })
-            })  
-       })
 })

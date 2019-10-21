@@ -3,7 +3,6 @@ function makeTakesArray() {
       {
           id: 1,
           take: 'test take',
-         date: new Date(),
           commentatorid: 1,
           commentator: 'Dave Test',
           correct: true,
@@ -12,7 +11,6 @@ function makeTakesArray() {
       {
           id: 2,
           take: 'test take',
-          date: new Date(),
           commentatorid: 2,
           commentator: 'Billiam Test',
           correct: true,
@@ -21,7 +19,6 @@ function makeTakesArray() {
       {
           id: 3,
           take: 'test take',
-          date: new Date(),
           commentatorid: 3,
           commentator: 'Jefe Test',
           correct: true,
@@ -30,7 +27,6 @@ function makeTakesArray() {
       {
           id: 4,
           take: 'test take',
-          date: new Date(),
           commentatorid: 4,
           commentator: 'Dad Test',
           correct: true,
@@ -39,7 +35,6 @@ function makeTakesArray() {
       {
           id: 5,
           take: 'test take',
-          date: new Date(),
           commentatorid: 1,
           commentator: 'Dave Test',
           correct: true,
@@ -48,7 +43,6 @@ function makeTakesArray() {
       {
           id: 6,
           take: 'test take',
-          date: new Date(),
           commentatorid: 3,
           commentator: 'Jefe Test',
           correct: true,
@@ -57,7 +51,6 @@ function makeTakesArray() {
       {
           id: 7,
           take: 'test take',
-          date: new Date(),
           commentatorid: 4,
           commentator: 'Dad Test',
           correct: true,
